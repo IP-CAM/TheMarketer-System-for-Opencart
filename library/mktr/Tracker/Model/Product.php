@@ -47,7 +47,7 @@ class Product
         'id' => 'product_id',
         'sku' => 'getSku',
         'name' => 'name',
-        'description' => 'description',
+        'description' => 'getDescription',
         'url' => 'getUrl',
         'main_image' => 'getImage',
         'image' => 'image',
@@ -225,6 +225,14 @@ class Product
     /** @noinspection PhpUnused */
     public static function getQuantity() {
         return self::$asset['quantity'] < 0 ? Config::getDefaultStock() : self::$asset['quantity'];
+    }
+
+    /** @noinspection PhpUnused */
+    public static function getDescription() {
+        return preg_replace('/[^\x20-\x7E\xA0-\x{10FFFF}]/u', '', self::$asset['description']);
+        //iconv('UTF-8', 'ASCII//TRANSLIT', self::$asset['description']);
+        // htmlspecialchars(self::$asset['description'], ENT_XML1 | ENT_QUOTES, 'UTF-8') ;
+        //htmlentities(str_replace(['<xml>', '</xml>'], ['', ''],self::$asset['description']), ENT_COMPAT);
     }
 
     public static function getSku() {
