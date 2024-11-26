@@ -539,23 +539,17 @@ class Observer
     {
         Customer::getByEmail($email);
 
-        $phone = Customer::telephone();
-
-        if (!empty($phone)) {
-            self::$eventName = 'setPhone';
-
-            self::$eventData = array(
-                'phone' => $phone
-            );
-
-            self::SessionSet();
-        }
-
         self::$eventName = 'setEmail';
 
         $send = array(
             'email_address' => Customer::email()
         );
+
+        $phone = Customer::telephone();
+
+        if (!empty($phone)) {
+            $send['phone'] = $phone;
+        }
 
         if (Customer::firstname() !== null) {
             $send['firstname'] = Customer::firstname();

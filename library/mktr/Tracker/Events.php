@@ -35,8 +35,7 @@ class Events
         "addToWishlist"=> array(false, "__sm__add_to_wishlist"),
         "removeFromWishlist"=> array(false, "__sm__remove_from_wishlist"),
         "saveOrder"=> array(true, "__sm__order"),
-        "setEmail"=> array(true, "__sm__set_email"),
-        "setPhone"=> array(false, "__sm__set_phone")
+        "setEmail"=> array(true, "__sm__set_email")
     );
 
     private static $eventsName = array(
@@ -51,8 +50,7 @@ class Events
         "__sm__initiate_checkout" => "Checkout",
         "__sm__order" => "saveOrder",
         "__sm__search" => "Search",
-        "__sm__set_email" => "setEmail",
-        "__sm__set_phone" => "setPhone"
+        "__sm__set_email" => "setEmail"
     );
 
     private static $eventsSchema = array(
@@ -74,10 +72,6 @@ class Events
 
         "Search" => array(
             "search_term" => "search_term"
-        ),
-
-        "setPhone" => array(
-            "phone" => "phone"
         ),
 
         "addToWishlist" => array(

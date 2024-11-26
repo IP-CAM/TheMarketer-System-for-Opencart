@@ -60,6 +60,7 @@ class setEmail
 
         if ($allGood)
         {
+            /* TODO Remove setPhone */
             Core::setSessionData('setPhone', array());
             Core::setSessionData('setEmail', array());
         }
