@@ -140,31 +140,29 @@ class Observer
                             $remove = Core::request()->get['remove'];
                             $product = explode(':', $remove);
                             $product_id = $product[0];
-                            // Options
-                            if (isset($product[1])) {
-                                $options = unserialize(base64_decode($product[1]));
-                            } else {
-                                $options = null;
+                            if ($product_id !== null) {
+                                // Options
+                                if (isset($product[1])) {
+                                    $options = unserialize(base64_decode($product[1]), array('allowed_classes' => false));
+                                } else {
+                                    $options = null;
+                                }
+
+                                $p = array_merge(self::$defPostAddRemove, array(
+                                    'product_id' => $product_id,
+                                    'option' => $options
+                                ));
+
+                                if (isset(Core::session()->data) &&
+                                    array_key_exists( 'cart', Core::session()->data) &&
+                                    array_key_exists($remove, Core::session()->data['cart'])) {
+                                    $p['quantity'] = Core::session()->data['cart'][$remove];
+                                }
+
+                                Product::getById($p['product_id']);
+                                $variant = self::getVariantID($p['option']);
+                                self::removeFromCart($p['product_id'], $p['quantity'], $variant);
                             }
-
-                            $p = array_merge(self::$defPostAddRemove, array(
-                                'product_id' => $product_id,
-                                'option' => $options
-                            ));
-
-                            if (isset(Core::session()->data) &&
-                                array_key_exists( 'cart', Core::session()->data) &&
-                                array_key_exists($remove, Core::session()->data['cart'])) {
-                                $p['quantity'] = Core::session()->data['cart'][$remove];
-                            }
-
-                            Product::getById($p['product_id']);
-
-                            $variant = self::getVariantID($p['option']);
-
-                            self::$do = false;
-                            self::removeFromCart($p['product_id'], $p['quantity'], $variant);
-
                         }
                         break;
                     case 'checkout/cart|remove':
@@ -359,27 +357,29 @@ class Observer
     }
 
     public static function getVariantID($o) {
-
-        if (Core::getOcVersion() >= "4") {
-            $productOptions = Core::ocModel('catalog/product')->getOptions(Product::id());
-        } else {
-            $productOptions = Core::ocModel('catalog/product')->getProductOptions(Product::id());
-        }
-        if (!empty($productOptions)) {
-            $add = array(Product::id());
-            foreach ($productOptions as $key => $val) {
-                $id = $val['product_option_id'];
-                if (isset($o[$id]) && !empty($val['product_option_value'])) {
-                    $add[] = $id;
-                    if (is_array($o[$id])) {
-                        $add[] = $o[$id][0];
-                    } else {
-                        $add[] = $o[$id];
+        if (Product::id() !== null) {
+            if (Core::getOcVersion() >= "4") {
+                $productOptions = Core::ocModel('catalog/product')->getOptions(Product::id());
+            } else {
+                $productOptions = Core::ocModel('catalog/product')->getProductOptions(Product::id());
+            }
+            
+            if (!empty($productOptions)) {
+                $add = array(Product::id());
+                foreach ($productOptions as $key => $val) {
+                    $id = $val['product_option_id'];
+                    if (isset($o[$id]) && !empty($val['product_option_value'])) {
+                        $add[] = $id;
+                        if (is_array($o[$id])) {
+                            $add[] = $o[$id][0];
+                        } else {
+                            $add[] = $o[$id];
+                        }
                     }
                 }
+    
+                return implode(Config::$vSeparator, $add);
             }
-
-            return implode(Config::$vSeparator, $add);
         }
         return null;
     }
