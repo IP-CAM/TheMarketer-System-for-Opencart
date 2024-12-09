@@ -622,7 +622,7 @@ class Product
 
     public static function imageUrl($i) {
         if (self::$Link === null) {
-            self::$Link = str_replace( array( "/index.php?route=", "index.php?route=", "/?route=", "?route=", " " ), array( "", "/", "", "/", "%20"), Core::url()->link("image/"));
+            self::$Link = str_replace( array( "/index.php?route=", "index.php?route=", "/?route=", "?route=", "//image","//"," "), array( "", "/", "", "/", "/image","/", "%20"), Core::url()->link("/image/"));
             
             if (substr(self::$Link, -1) !== '/') {
                 self::$Link = self::$Link . '/';

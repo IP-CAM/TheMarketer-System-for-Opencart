@@ -42,8 +42,8 @@ trait Catalog {
         }
     }
 
-    public static function init($registry, $th){
-        Core::init($th);
+    public static function init($registry = null, $th = null){
+        Core::init($th, $registry);
     }
 
     public static function conf() {

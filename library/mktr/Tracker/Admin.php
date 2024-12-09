@@ -100,8 +100,8 @@ trait Admin {
         self::init($registry, $this);
     }
 
-    public static function init($registry, $th){
-        Core::init($th);
+    public static function init($registry = null, $th = null){
+        Core::init($th, $registry);
         if (Config::$addToModule) {
             if (isset(Core::request()->get['module_id'])) {
                 $set = Module::getModule(Core::request()->get['module_id']);

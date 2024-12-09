@@ -32,6 +32,7 @@ use Mktr\Helper\Model\Store;
 class Core
 {
     private static $init = null;
+    private static $registry = null;
     private static $storeID = null;
     /**
      * @var array
@@ -41,10 +42,13 @@ class Core
     private static $tkn = null;
     private static $data = array();
 
-    public static function init($controller = null)
+    public static function init($controller = null, $registry = null)
     {
         if ($controller !== null) {
             self::$init = $controller;
+        }
+        if ($registry !== null) {
+            self::$registry = $registry;
         }
         return self::$init;
     }
