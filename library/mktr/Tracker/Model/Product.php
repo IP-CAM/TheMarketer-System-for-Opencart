@@ -123,7 +123,7 @@ class Product
         if (self::date_added() !== '0000-00-00 00:00:00') {
             return  date(Config::$dateFormat, strtotime(self::date_added()));
         }
-        return null;
+        return "2000-01-01 00:00";
     }
 
     public static function getProduct($product_id) {
