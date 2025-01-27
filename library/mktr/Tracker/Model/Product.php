@@ -462,6 +462,15 @@ class Product
 
             foreach ($products as $k => $val) {
                 if (empty($val)) { continue; }
+
+                $check = (self::special_price()/self::regular_price())*100;
+
+                if ($check > 1) {
+                    $sale_price = self::special_price();
+                } else {
+                    $sale_price = (self::regular_price() - (self::regular_price()*(self::special_price()/100)));
+                }
+                
                 /** @noinspection PhpArrayIndexImmediatelyRewrittenInspection */
                 $newVariation = array(
                     'id' => array(self::id()),
@@ -618,6 +627,12 @@ class Product
                     self::tax_class_id(),
                     Core::i()->config->get('config_tax')
                 );
+            }
+
+            $check = ($p/self::regular_price())*100;
+
+            if ($check < 1) {
+                $p = (self::regular_price() - (self::regular_price()*($p/100)));
             }
         } else {
             $p = self::getPrice(true);
