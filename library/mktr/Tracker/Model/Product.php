@@ -419,6 +419,9 @@ class Product
                         $parentDATA = $value['pcop_front'][0]['values'];
                     }
                     foreach ($value[$opt] as $key1 => $value1) { 
+                        if (empty($value1['price']) && isset($value1['ocm_price'])) {
+                            $value1['price'] = $value1['ocm_price'];
+                        }
                         $newAttr['o'.$value['product_option_id']][] = [
                             'parent_id' => $parent,
                             'parentDATA' => $parentDATA,
@@ -502,6 +505,8 @@ class Product
                         if ($val0['price_prefix'] == '+') {
                             // $newVariation['price'] = $newVariation['price'] + $val0['price'];
                             $newVariation['sale_price'] = $newVariation['sale_price'] + $val0['price'];
+                        } else if ($val0['price_prefix'] == '=') {
+                            $newVariation['sale_price'] = $val0['price'];
                         } else {
                             // $newVariation['price'] = $newVariation['price'] - $val0['price'];
                             $newVariation['sale_price'] = $newVariation['sale_price'] - $val0['price'];
@@ -531,10 +536,12 @@ class Product
                 $newVariation['sku'] = implode(Config::$vSeparator, $newVariation['sku']);
                 $newVariation['sku'] = str_replace(' ', '_', $newVariation['sku']);
 
-                $added[] = $newVariation['id'];
                 if (in_array($newVariation['id'], $added)) {
                     continue;
                 }
+
+                $added[] = $newVariation['id'];
+                
                 if (self::$addTax) {
                     $newVariation['price'] = Core::i()->tax->calculate(
                         (float) $newVariation['price'],

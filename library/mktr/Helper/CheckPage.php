@@ -27,6 +27,8 @@ class CheckPage
             'product/manufacturer/info'
         ),
         'is_checkout' => array(
+            'extension/module/qnec',
+            'checkout',
             'checkout/checkout',
             'checkout/simplecheckout',
             'checkout/ajaxquickcheckout',
